@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SportsBot - Watson Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: white;
+      text-align: center;
+    }
+
+    header {
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      background: rgba(0,0,0,0.4);
+    }
+
+    .container {
+      margin-top: 100px;
+    }
+
+    h1 {
+      font-size: 40px;
+    }
+
+    p {
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 12px 25px;
+      background: #00c6ff;
+      border: none;
+      border-radius: 25px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: #0072ff;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+      font-size: 14px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>⚽ SportsBot Assistant</header>
+
+  <div class="container">
+    <h1>Welcome!</h1>
+    <p>Ask me anything about sports 🎯</p>
+    <button class="btn" onclick="alert('Chat icon is at the bottom right!')">
+      Start Chat
+    </button>
+  </div>
+
+  <footer>Powered by IBM Watsonx Assistant</footer>
+
+  <!-- Watson Assistant Script -->
+  <script>
+    window.watsonAssistantChatOptions = {
+      integrationID: "de5224ed-0fa0-4cf2-b995-2b30a75bee63",
+      region: "au-syd",
+      serviceInstanceID: "7a0e200c-1fc3-45d1-a4bf-1945cb1811e4",
+      onLoad: async (instance) => { await instance.render(); }
+    };
+
+    setTimeout(function(){
+      const t = document.createElement('script');
+      t.src = "https://web-chat.global.assistant.watson.appdomain.cloud/versions/" 
+              + (window.watsonAssistantChatOptions.clientVersion || 'latest') 
+              + "/WatsonAssistantChatEntry.js";
+      document.head.appendChild(t);
+    });
+  </script>
+
+</body>
+</html>
