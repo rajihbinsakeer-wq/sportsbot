@@ -2,52 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>SportsBot - Watson Assistant</title>
+  <title>SportsBot - Neon Edition</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      font-family: 'Arial', sans-serif;
       color: white;
       text-align: center;
+
+      /* Background Image + Neon Overlay */
+      background: 
+        linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)),
+        url('cristiano-ronaldo-cool-real-madrid-cfikqdlniq9k836k.jpg') no-repeat center center/cover;
     }
 
     header {
       padding: 20px;
-      font-size: 28px;
+      font-size: 30px;
       font-weight: bold;
       background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(10px);
+      text-shadow: 0 0 10px #00f7ff, 0 0 20px #00f7ff;
     }
 
     .container {
-      margin-top: 100px;
+      margin-top: 120px;
     }
 
     h1 {
-      font-size: 40px;
+      font-size: 50px;
+      text-shadow: 0 0 15px #00c6ff, 0 0 30px #0072ff;
     }
 
     p {
       font-size: 18px;
       opacity: 0.9;
+      text-shadow: 0 0 5px #00f7ff;
     }
 
     .btn {
-      margin-top: 20px;
-      padding: 12px 25px;
-      background: #00c6ff;
-      border: none;
-      border-radius: 25px;
-      color: white;
+      margin-top: 25px;
+      padding: 14px 30px;
+      border-radius: 30px;
       font-size: 16px;
       cursor: pointer;
+      border: 2px solid #00f7ff;
+      background: transparent;
+      color: #00f7ff;
       transition: 0.3s;
+      box-shadow: 0 0 10px #00f7ff, inset 0 0 10px #00f7ff;
     }
 
     .btn:hover {
-      background: #0072ff;
+      background: #00f7ff;
+      color: black;
+      box-shadow: 0 0 20px #00f7ff, 0 0 40px #00c6ff;
     }
 
     footer {
@@ -56,6 +67,7 @@
       width: 100%;
       font-size: 14px;
       opacity: 0.7;
+      text-shadow: 0 0 5px #00f7ff;
     }
   </style>
 </head>
