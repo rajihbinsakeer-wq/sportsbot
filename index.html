@@ -10,7 +10,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
     }
 
     body {
@@ -55,7 +55,6 @@
       overflow: hidden;
     }
 
-    /* Background diagonal neon shape */
     .hero::after {
       content: "";
       position: absolute;
@@ -68,7 +67,6 @@
       z-index: 0;
     }
 
-    /* LEFT TEXT */
     .hero-text {
       max-width: 500px;
       z-index: 1;
@@ -106,7 +104,7 @@
       background: white;
     }
 
-    /* RIGHT IMAGE */
+    /* IMAGE */
     .hero-img {
       position: relative;
       z-index: 1;
@@ -114,7 +112,8 @@
 
     .hero-img img {
       width: 450px;
-      filter: drop-shadow(0 0 20px rgba(0,0,0,0.6));
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(156, 255, 0, 0.4);
     }
 
     /* FOOTER */
@@ -171,7 +170,7 @@
     </div>
 
     <div class="hero-img">
-      <img src="bespo1.jpg" alt="Sports Player">
+      <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b" alt="Sports Player">
     </div>
   </section>
 
