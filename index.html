@@ -2,87 +2,178 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>SportsBot - Neon Edition</title>
+  <title>SportsBot - Pro Theme</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    body {
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
       font-family: 'Arial', sans-serif;
+    }
+
+    body {
+      background: #0b0f14;
       color: white;
-      text-align: center;
-
-      /* Background Image + Neon Overlay */
-      background: 
-        linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)),
-        url('cristiano-ronaldo-cool-real-madrid-cfikqdlniq9k836k.jpg') no-repeat center center/cover;
     }
 
+    /* NAVBAR */
     header {
-      padding: 20px;
-      font-size: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      background: rgba(0,0,0,0.6);
+    }
+
+    header h2 {
+      color: #9cff00;
+      letter-spacing: 2px;
+    }
+
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: white;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: #9cff00;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 90vh;
+      padding: 0 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Background diagonal neon shape */
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -150px;
+      top: 0;
+      width: 500px;
+      height: 100%;
+      background: #9cff00;
+      transform: skewX(-25deg);
+      z-index: 0;
+    }
+
+    /* LEFT TEXT */
+    .hero-text {
+      max-width: 500px;
+      z-index: 1;
+    }
+
+    .hero-text h1 {
+      font-size: 60px;
       font-weight: bold;
-      background: rgba(0,0,0,0.4);
-      backdrop-filter: blur(10px);
-      text-shadow: 0 0 10px #00f7ff, 0 0 20px #00f7ff;
+      line-height: 1.1;
     }
 
-    .container {
-      margin-top: 120px;
+    .hero-text h1 span {
+      color: #9cff00;
     }
 
-    h1 {
-      font-size: 50px;
-      text-shadow: 0 0 15px #00c6ff, 0 0 30px #0072ff;
-    }
-
-    p {
-      font-size: 18px;
-      opacity: 0.9;
-      text-shadow: 0 0 5px #00f7ff;
+    .hero-text p {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #bbb;
+      line-height: 1.6;
     }
 
     .btn {
       margin-top: 25px;
-      padding: 14px 30px;
-      border-radius: 30px;
-      font-size: 16px;
+      padding: 12px 25px;
+      background: #9cff00;
+      border: none;
+      color: black;
+      font-weight: bold;
       cursor: pointer;
-      border: 2px solid #00f7ff;
-      background: transparent;
-      color: #00f7ff;
       transition: 0.3s;
-      box-shadow: 0 0 10px #00f7ff, inset 0 0 10px #00f7ff;
     }
 
     .btn:hover {
-      background: #00f7ff;
-      color: black;
-      box-shadow: 0 0 20px #00f7ff, 0 0 40px #00c6ff;
+      background: white;
     }
 
+    /* RIGHT IMAGE */
+    .hero-img {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-img img {
+      width: 450px;
+      filter: drop-shadow(0 0 20px rgba(0,0,0,0.6));
+    }
+
+    /* FOOTER */
     footer {
-      position: fixed;
-      bottom: 10px;
-      width: 100%;
+      text-align: center;
+      padding: 15px;
       font-size: 14px;
-      opacity: 0.7;
-      text-shadow: 0 0 5px #00f7ff;
+      opacity: 0.6;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width: 900px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .hero-img img {
+        width: 300px;
+        margin-top: 20px;
+      }
+
+      .hero::after {
+        display: none;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <header>⚽ SportsBot Assistant</header>
+  <!-- NAVBAR -->
+  <header>
+    <h2>SPORT BOT</h2>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Company</a>
+      <a href="#">Players</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
 
-  <div class="container">
-    <h1>Welcome!</h1>
-    <p>Ask me anything about sports 🎯</p>
-    <button class="btn" onclick="alert('Chat icon is at the bottom right!')">
-      Start Chat
-    </button>
-  </div>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>FOCUS ON YOUR <span>PURPOSE</span></h1>
+      <p>
+        Ask anything about sports, players, teams, and stats. 
+        Your smart assistant is ready to help instantly.
+      </p>
+      <button class="btn" onclick="alert('Chat icon is at bottom right!')">
+        Start Chat
+      </button>
+    </div>
+
+    <div class="hero-img">
+      <img src="bespo1.jpg" alt="Sports Player">
+    </div>
+  </section>
 
   <footer>Powered by IBM Watsonx Assistant</footer>
 
