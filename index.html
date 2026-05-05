@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>SportsBot - Pro Theme</title>
+  <title>Champions League Bot</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -10,11 +10,11 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
     }
 
     body {
-      background: #0b0f14;
+      background: linear-gradient(to right, #0a1f44, #020617);
       color: white;
     }
 
@@ -24,24 +24,26 @@
       justify-content: space-between;
       align-items: center;
       padding: 20px 60px;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0, 0, 40, 0.8);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
     header h2 {
-      color: #9cff00;
+      color: #ffffff;
       letter-spacing: 2px;
+      font-weight: 600;
     }
 
     nav a {
       margin: 0 15px;
       text-decoration: none;
-      color: white;
+      color: #d1d5db;
       font-size: 14px;
       transition: 0.3s;
     }
 
     nav a:hover {
-      color: #9cff00;
+      color: #00bfff;
     }
 
     /* HERO SECTION */
@@ -51,77 +53,59 @@
       justify-content: space-between;
       height: 90vh;
       padding: 0 60px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      right: -150px;
-      top: 0;
-      width: 500px;
-      height: 100%;
-      background: #9cff00;
-      transform: skewX(-25deg);
-      z-index: 0;
     }
 
     .hero-text {
       max-width: 500px;
-      z-index: 1;
     }
 
     .hero-text h1 {
-      font-size: 60px;
-      font-weight: bold;
+      font-size: 58px;
+      font-weight: 700;
       line-height: 1.1;
     }
 
     .hero-text h1 span {
-      color: #9cff00;
+      color: #00bfff;
     }
 
     .hero-text p {
       margin-top: 20px;
-      font-size: 14px;
-      color: #bbb;
+      font-size: 15px;
+      color: #9ca3af;
       line-height: 1.6;
     }
 
     .btn {
       margin-top: 25px;
-      padding: 12px 25px;
-      background: #9cff00;
+      padding: 12px 28px;
+      background: linear-gradient(135deg, #00bfff, #2563eb);
       border: none;
-      color: black;
-      font-weight: bold;
+      color: white;
+      font-weight: 600;
       cursor: pointer;
+      border-radius: 6px;
       transition: 0.3s;
     }
 
     .btn:hover {
       background: white;
+      color: #0a1f44;
     }
 
     /* IMAGE */
-    .hero-img {
-      position: relative;
-      z-index: 1;
-    }
-
     .hero-img img {
-      width: 450px;
-      border-radius: 20px;
-      box-shadow: 0 0 40px rgba(156, 255, 0, 0.4);
+      width: 480px;
+      border-radius: 15px;
+      box-shadow: 0 0 40px rgba(0, 191, 255, 0.3);
     }
 
     /* FOOTER */
     footer {
       text-align: center;
       padding: 15px;
-      font-size: 14px;
-      opacity: 0.6;
+      font-size: 13px;
+      opacity: 0.5;
     }
 
     /* RESPONSIVE */
@@ -129,15 +113,13 @@
       .hero {
         flex-direction: column;
         text-align: center;
+        height: auto;
+        padding: 40px 20px;
       }
 
       .hero-img img {
         width: 300px;
-        margin-top: 20px;
-      }
-
-      .hero::after {
-        display: none;
+        margin-top: 30px;
       }
     }
   </style>
@@ -147,11 +129,11 @@
 
   <!-- NAVBAR -->
   <header>
-    <h2>SPORT BOT</h2>
+    <h2>UCL BOT</h2>
     <nav>
       <a href="#">Home</a>
-      <a href="#">Company</a>
-      <a href="#">Players</a>
+      <a href="#">Teams</a>
+      <a href="#">Fixtures</a>
       <a href="#">Contact</a>
     </nav>
   </header>
@@ -159,10 +141,10 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-text">
-      <h1>FOCUS ON YOUR <span>PURPOSE</span></h1>
+      <h1>UEFA <span>CHAMPIONS</span> LEAGUE</h1>
       <p>
-        Ask anything about sports, players, teams, and stats. 
-        Your smart assistant is ready to help instantly.
+        Get real-time updates on matches, teams, players, and stats. 
+        Experience the ultimate football competition with your smart assistant.
       </p>
       <button class="btn" onclick="alert('Chat icon is at bottom right!')">
         Start Chat
@@ -170,8 +152,8 @@
     </div>
 
     <div class="hero-img">
-      <!-- Ronaldo + Messi themed image -->
-      <img src="file:///C:/Users/HP/OneDrive/Pictures/cristiano-ronaldo-cool-real-madrid-cfikqdlniq9k836k.jpg">
+      <!-- Replace with a proper online image -->
+      <img src="https://images.unsplash.com/photo-1518091043644-c1d4457512c6">
     </div>
   </section>
 
