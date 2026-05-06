@@ -2,171 +2,1042 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Football Bot</title>
+  <title>FOOTBUZZ — Football Intelligence</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
+    :root {
+      --electric: #00d4ff;
+      --gold: #f5a623;
+      --dark: #030a1a;
+      --mid: #071428;
+      --glass: rgba(255,255,255,0.04);
+      --border: rgba(0, 212, 255, 0.15);
     }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
 
     body {
-      background: linear-gradient(to right, #0a1f44, #020617);
-      color: white;
+      background: var(--dark);
+      color: #fff;
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
     }
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 60px;
-      background: rgba(0, 0, 40, 0.8);
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+    /* Custom cursor */
+    .cursor {
+      width: 12px; height: 12px;
+      background: var(--electric);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.2s, height 0.2s;
+      mix-blend-mode: screen;
     }
-
-    header h2 {
-      color: #ffffff;
-      letter-spacing: 2px;
-      font-weight: 600;
-    }
-
-    nav a {
-      margin: 0 15px;
-      text-decoration: none;
-      color: #d1d5db;
-      font-size: 14px;
-      transition: 0.3s;
-    }
-
-    nav a:hover {
-      color: #00bfff;
-    }
-
-    .hero {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 90vh;
-      padding: 0 60px;
-    }
-
-    .hero-text {
-      max-width: 500px;
-    }
-
-    .hero-text h1 {
-      font-size: 58px;
-      font-weight: 700;
-      line-height: 1.1;
-    }
-
-    .hero-text h1 span {
-      color: #00bfff;
-    }
-
-    .hero-text p {
-      margin-top: 20px;
-      font-size: 15px;
-      color: #9ca3af;
-      line-height: 1.6;
-    }
-
-    .btn {
-      margin-top: 25px;
-      padding: 12px 28px;
-      background: linear-gradient(135deg, #00bfff, #2563eb);
-      border: none;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      border-radius: 6px;
-      transition: 0.3s;
-    }
-
-    .btn:hover {
-      background: white;
-      color: #0a1f44;
-    }
-
-    .hero-img img {
-      width: 480px;
-      border-radius: 15px;
-      box-shadow: 0 0 40px rgba(0, 191, 255, 0.3);
-    }
-
-    footer {
-      text-align: center;
-      padding: 15px;
-      font-size: 13px;
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1.5px solid var(--electric);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.15s ease, width 0.2s, height 0.2s, opacity 0.2s;
       opacity: 0.5;
     }
 
-    @media(max-width: 900px) {
-      .hero {
-        flex-direction: column;
-        text-align: center;
-        height: auto;
-        padding: 40px 20px;
-      }
+    /* Noise overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
 
-      .hero-img img {
-        width: 300px;
-        margin-top: 30px;
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 60px;
+      backdrop-filter: blur(20px);
+      background: rgba(3, 10, 26, 0.7);
+      border-bottom: 1px solid var(--border);
+      transition: padding 0.3s;
+    }
+    nav.scrolled { padding: 14px 60px; }
+    .nav-logo {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 28px;
+      letter-spacing: 4px;
+      color: #fff;
+    }
+    .nav-logo span { color: var(--electric); }
+    .nav-links { display: flex; gap: 36px; }
+    .nav-links a {
+      text-decoration: none;
+      color: rgba(255,255,255,0.6);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      position: relative;
+      transition: color 0.3s;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--electric);
+      transition: width 0.3s;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ── HERO ── */
+    #home {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 120px 60px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated background orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: float 8s ease-in-out infinite;
+    }
+    .orb-1 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(0,212,255,0.12), transparent 70%);
+      top: -100px; left: -100px;
+      animation-delay: 0s;
+    }
+    .orb-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(245,166,35,0.08), transparent 70%);
+      bottom: 0; right: 200px;
+      animation-delay: -3s;
+    }
+    .orb-3 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(0,212,255,0.08), transparent 70%);
+      top: 50%; right: -50px;
+      animation-delay: -5s;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-30px) scale(1.05); }
+    }
+
+    /* Grid lines background */
+    .grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .hero-content { position: relative; z-index: 2; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--electric);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.8s forwards 0.2s;
+    }
+    .badge-dot {
+      width: 6px; height: 6px;
+      background: var(--electric);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(64px, 7vw, 100px);
+      line-height: 0.95;
+      letter-spacing: 2px;
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.8s forwards 0.4s;
+    }
+    .hero-title .line-accent { color: var(--electric); }
+    .hero-title .line-outline {
+      -webkit-text-stroke: 1px rgba(255,255,255,0.4);
+      color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.8;
+      max-width: 400px;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp 0.8s forwards 0.6s;
+    }
+
+    .hero-actions {
+      display: flex; gap: 16px; align-items: center;
+      opacity: 0;
+      animation: fadeUp 0.8s forwards 0.8s;
+    }
+
+    .btn-primary {
+      padding: 14px 32px;
+      background: var(--electric);
+      color: var(--dark);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--gold);
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+    }
+    .btn-primary:hover::before { transform: translateX(0); }
+    .btn-primary span { position: relative; z-index: 1; }
+
+    .btn-ghost {
+      padding: 14px 32px;
+      background: transparent;
+      color: #fff;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: all 0.3s;
+      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    }
+    .btn-ghost:hover {
+      border-color: var(--electric);
+      color: var(--electric);
+    }
+
+    /* Stats bar */
+    .hero-stats {
+      display: flex; gap: 40px;
+      margin-top: 60px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.8s forwards 1s;
+    }
+    .stat-item { }
+    .stat-num {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 36px;
+      color: var(--electric);
+      letter-spacing: 2px;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-top: 4px;
+    }
+
+    /* Hero image side */
+    .hero-visual {
+      position: relative; z-index: 2;
+      display: flex; justify-content: center; align-items: center;
+      opacity: 0;
+      animation: fadeIn 1.2s forwards 0.5s;
+    }
+
+    .img-frame {
+      position: relative;
+      width: 420px; height: 520px;
+    }
+    .img-frame::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(135deg, var(--electric), transparent 50%, var(--gold));
+      border-radius: 4px;
+      z-index: 0;
+    }
+    .img-frame::after {
+      content: '';
+      position: absolute;
+      top: 20px; right: -20px;
+      width: 100%; height: 100%;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      z-index: -1;
+    }
+    .img-frame img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      border-radius: 3px;
+      position: relative; z-index: 1;
+      display: block;
+      filter: grayscale(20%) contrast(1.05);
+    }
+    .img-placeholder {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #071428, #0d2040);
+      border-radius: 3px;
+      position: relative; z-index: 1;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 12px;
+    }
+    .img-placeholder svg { opacity: 0.3; }
+    .img-placeholder p {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.3;
+    }
+
+    /* Floating card */
+    .float-card {
+      position: absolute;
+      background: rgba(7, 20, 40, 0.9);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      padding: 14px 18px;
+      border-radius: 8px;
+      z-index: 10;
+      animation: cardFloat 4s ease-in-out infinite;
+    }
+    .float-card-1 {
+      bottom: 60px; left: -40px;
+      animation-delay: -1s;
+    }
+    .float-card-2 {
+      top: 60px; right: -30px;
+      animation-delay: -2s;
+    }
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .card-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 4px;
+    }
+    .card-value {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 22px;
+      color: var(--electric);
+      letter-spacing: 1px;
+    }
+    .card-live {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #4ade80;
+    }
+    .live-dot {
+      width: 6px; height: 6px;
+      background: #4ade80;
+      border-radius: 50%;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* ── SECTION SHARED ── */
+    section { position: relative; }
+    .section-header {
+      text-align: center;
+      margin-bottom: 70px;
+    }
+    .section-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--electric);
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(40px, 5vw, 64px);
+      letter-spacing: 2px;
+      line-height: 1;
+    }
+    .section-title .dim { color: rgba(255,255,255,0.2); }
+
+    /* ── MARQUEE ── */
+    .marquee-bar {
+      background: var(--electric);
+      padding: 12px 0;
+      overflow: hidden;
+      display: flex;
+    }
+    .marquee-track {
+      display: flex;
+      gap: 60px;
+      white-space: nowrap;
+      animation: marquee 20s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .marquee-item {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 14px;
+      letter-spacing: 3px;
+      color: var(--dark);
+      display: flex; align-items: center; gap: 20px;
+    }
+    .marquee-item::after {
+      content: '⚡';
+      font-size: 10px;
+    }
+
+    /* ── TEAMS ── */
+    #teams {
+      padding: 100px 60px;
+      background: var(--mid);
+    }
+    .teams-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .team-card {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      padding: 32px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s;
+      clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+    }
+    .team-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(0,212,255,0.06), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .team-card:hover { transform: translateY(-8px); border-color: rgba(0,212,255,0.4); }
+    .team-card:hover::before { opacity: 1; }
+    .team-emoji { font-size: 40px; margin-bottom: 12px; }
+    .team-name {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 20px;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+    .team-league {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+    .team-rank {
+      position: absolute; top: 12px; right: 14px;
+      font-family: 'Bebas Neue', cursive;
+      font-size: 32px;
+      color: rgba(255,255,255,0.06);
+      letter-spacing: 1px;
+    }
+
+    /* ── FIXTURES ── */
+    #fixtures {
+      padding: 100px 60px;
+    }
+    .fixtures-list { display: flex; flex-direction: column; gap: 16px; }
+    .fixture-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 20px;
+      padding: 24px 32px;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      transition: border-color 0.3s, background 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .fixture-row::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--electric);
+      transform: scaleY(0);
+      transition: transform 0.3s;
+    }
+    .fixture-row:hover { border-color: rgba(0,212,255,0.3); background: rgba(0,212,255,0.03); }
+    .fixture-row:hover::before { transform: scaleY(1); }
+    .fixture-team {
+      display: flex; align-items: center; gap: 14px;
+    }
+    .fixture-team.right { justify-content: flex-end; flex-direction: row-reverse; }
+    .team-logo {
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .team-info-name {
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .team-info-league {
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.4);
+    }
+    .fixture-score {
+      text-align: center;
+      min-width: 80px;
+    }
+    .score-box {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 32px;
+      letter-spacing: 4px;
+      color: var(--electric);
+      line-height: 1;
+    }
+    .score-time {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-top: 4px;
+    }
+    .live-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(74, 222, 128, 0.1);
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #4ade80;
+      margin-top: 6px;
+    }
+    .live-badge .dot {
+      width: 5px; height: 5px;
+      background: #4ade80;
+      border-radius: 50%;
+      animation: pulse 1s infinite;
+    }
+
+    /* ── CHAT SECTION ── */
+    #contact {
+      padding: 100px 60px;
+      background: var(--mid);
+    }
+    .contact-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .contact-inner p {
+      color: rgba(255,255,255,0.5);
+      line-height: 1.8;
+      margin-bottom: 40px;
+      font-size: 15px;
+    }
+    .chat-trigger {
+      display: inline-flex; align-items: center; gap: 14px;
+      padding: 18px 40px;
+      background: linear-gradient(135deg, var(--electric), #2563eb);
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .chat-trigger::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--gold), #e85d04);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .chat-trigger:hover::before { opacity: 1; }
+    .chat-trigger span { position: relative; z-index: 1; }
+    .chat-icon {
+      width: 20px; height: 20px;
+      position: relative; z-index: 1;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 40px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+    }
+    .footer-logo {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 22px;
+      letter-spacing: 4px;
+    }
+    .footer-logo span { color: var(--electric); }
+    .footer-copy {
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.3);
+    }
+    .footer-powered {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 18px 24px; }
+      .nav-links { display: none; }
+      #home {
+        grid-template-columns: 1fr;
+        padding: 100px 24px 60px;
+        text-align: center;
       }
+      .hero-sub { margin: 0 auto 40px; }
+      .hero-actions { justify-content: center; }
+      .hero-stats { justify-content: center; flex-wrap: wrap; gap: 24px; }
+      .hero-visual { order: -1; margin-bottom: 40px; }
+      .img-frame { width: 280px; height: 340px; }
+      .float-card-1 { display: none; }
+      .float-card-2 { display: none; }
+      #teams, #fixtures, #contact { padding: 70px 24px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; }
+      .fixture-row { padding: 16px 20px; }
     }
   </style>
 </head>
-
 <body>
 
-  <header>
-    <h2>FOOTBUZZ</h2>
-    <nav>
-      <a href="#">Home</a>
-      <a href="#">Teams</a>
-      <a href="#">Fixtures</a>
-      <a href="#">Contact</a>
-    </nav>
-  </header>
+  <!-- Custom cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
-  <section class="hero">
-    <div class="hero-text">
-      <h1>GET YOUR <span>FOOTBALL NEWS NOW</span></h1>
-      <p>
-        Get real-time updates on matches, teams, players, and stats. 
-        Experience the ultimate football competition with your smart assistant.
+  <!-- Navigation -->
+  <nav id="navbar">
+    <div class="nav-logo">FOOT<span>BUZZ</span></div>
+    <div class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#teams">Teams</a>
+      <a href="#fixtures">Fixtures</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section id="home">
+    <div class="grid-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Live Football Intelligence
+      </div>
+      <h1 class="hero-title">
+        GET YOUR<br>
+        <span class="line-accent">FOOTBALL</span><br>
+        <span class="line-outline">NEWS NOW</span>
+      </h1>
+      <p class="hero-sub">
+        Real-time match updates, team stats, player insights, and live scores —
+        all powered by your intelligent football assistant.
       </p>
-      <button class="btn" onclick="alert('Chat icon is at bottom right!')">
-        Start Chat
-      </button>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+          <span>Start Chat</span>
+        </button>
+        <button class="btn-ghost" onclick="document.getElementById('fixtures').scrollIntoView({behavior:'smooth'})">
+          Live Fixtures
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num" data-target="98">0</div>
+          <div class="stat-label">Live Leagues</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" data-target="540">0</div>
+          <div class="stat-label">Teams Tracked</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" data-target="24">0</div>
+          <div class="stat-label">Hours Live</div>
+        </div>
+      </div>
     </div>
 
-    <div class="hero-img">
-      <img src="file:///C:/Users/HP/OneDrive/Pictures/cristiano-ronaldo-cool-real-madrid-cfikqdlniq9k836k.jpg">
+    <div class="hero-visual">
+      <div class="img-frame">
+        <img
+          src="file:///C:/Users/HP/OneDrive/Pictures/cristiano-ronaldo-cool-real-madrid-cfikqdlniq9k836k.jpg"
+          alt="Football Star"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        >
+        <div class="img-placeholder" style="display:none;">
+          <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="30" cy="30" r="28" stroke="white" stroke-width="1.5"/>
+            <path d="M30 10 L34 22 L46 22 L37 30 L40 42 L30 35 L20 42 L23 30 L14 22 L26 22 Z" stroke="white" stroke-width="1.5" fill="none"/>
+          </svg>
+          <p>Your Image Here</p>
+        </div>
+
+        <div class="float-card float-card-1">
+          <div class="card-label">Top Scorer</div>
+          <div class="card-value">CR7 — 32G</div>
+        </div>
+        <div class="float-card float-card-2">
+          <div class="card-live">
+            <span class="live-dot"></span>
+            Live Now
+          </div>
+          <div class="card-value">3 Matches</div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <footer>Powered by IBM Watsonx Assistant</footer>
+  <!-- Marquee -->
+  <div class="marquee-bar">
+    <div class="marquee-track" id="marqueeTrack">
+      <span class="marquee-item">Premier League Updates</span>
+      <span class="marquee-item">Champions League Results</span>
+      <span class="marquee-item">La Liga Standings</span>
+      <span class="marquee-item">Transfer Window News</span>
+      <span class="marquee-item">Serie A Highlights</span>
+      <span class="marquee-item">Bundesliga Fixtures</span>
+      <span class="marquee-item">World Cup Qualifiers</span>
+      <span class="marquee-item">Player Stats & Analytics</span>
+      <!-- duplicated for infinite scroll -->
+      <span class="marquee-item">Premier League Updates</span>
+      <span class="marquee-item">Champions League Results</span>
+      <span class="marquee-item">La Liga Standings</span>
+      <span class="marquee-item">Transfer Window News</span>
+      <span class="marquee-item">Serie A Highlights</span>
+      <span class="marquee-item">Bundesliga Fixtures</span>
+      <span class="marquee-item">World Cup Qualifiers</span>
+      <span class="marquee-item">Player Stats & Analytics</span>
+    </div>
+  </div>
 
+  <!-- Teams -->
+  <section id="teams">
+    <div class="section-header reveal">
+      <div class="section-tag">Top Clubs</div>
+      <h2 class="section-title">FEATURED <span class="dim">TEAMS</span></h2>
+    </div>
+    <div class="teams-grid">
+      <div class="team-card reveal reveal-delay-1">
+        <span class="team-rank">01</span>
+        <div class="team-emoji">🔴</div>
+        <div class="team-name">Manchester United</div>
+        <div class="team-league">Premier League</div>
+      </div>
+      <div class="team-card reveal reveal-delay-2">
+        <span class="team-rank">02</span>
+        <div class="team-emoji">⚪</div>
+        <div class="team-name">Real Madrid</div>
+        <div class="team-league">La Liga</div>
+      </div>
+      <div class="team-card reveal reveal-delay-3">
+        <span class="team-rank">03</span>
+        <div class="team-emoji">🔵</div>
+        <div class="team-name">Barcelona</div>
+        <div class="team-league">La Liga</div>
+      </div>
+      <div class="team-card reveal reveal-delay-4">
+        <span class="team-rank">04</span>
+        <div class="team-emoji">🟡</div>
+        <div class="team-name">Borussia Dortmund</div>
+        <div class="team-league">Bundesliga</div>
+      </div>
+      <div class="team-card reveal reveal-delay-5">
+        <span class="team-rank">05</span>
+        <div class="team-emoji">⚫</div>
+        <div class="team-name">Juventus</div>
+        <div class="team-league">Serie A</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fixtures -->
+  <section id="fixtures">
+    <div style="max-width: 900px; margin: 0 auto; padding: 0 0;">
+      <div class="section-header reveal">
+        <div class="section-tag">This Week</div>
+        <h2 class="section-title">LATEST <span class="dim">FIXTURES</span></h2>
+      </div>
+      <div class="fixtures-list">
+        <div class="fixture-row reveal reveal-delay-1">
+          <div class="fixture-team">
+            <div class="team-logo">🔴</div>
+            <div>
+              <div class="team-info-name">Man United</div>
+              <div class="team-info-league">Home</div>
+            </div>
+          </div>
+          <div class="fixture-score">
+            <div class="score-box">2 — 1</div>
+            <div class="live-badge"><span class="dot"></span>Live 78'</div>
+          </div>
+          <div class="fixture-team right">
+            <div class="team-logo">🔵</div>
+            <div>
+              <div class="team-info-name">Chelsea</div>
+              <div class="team-info-league">Away</div>
+            </div>
+          </div>
+        </div>
+        <div class="fixture-row reveal reveal-delay-2">
+          <div class="fixture-team">
+            <div class="team-logo">⚪</div>
+            <div>
+              <div class="team-info-name">Real Madrid</div>
+              <div class="team-info-league">Home</div>
+            </div>
+          </div>
+          <div class="fixture-score">
+            <div class="score-box">— VS —</div>
+            <div class="score-time">Tomorrow 20:45</div>
+          </div>
+          <div class="fixture-team right">
+            <div class="team-logo">🔵</div>
+            <div>
+              <div class="team-info-name">Barcelona</div>
+              <div class="team-info-league">Away</div>
+            </div>
+          </div>
+        </div>
+        <div class="fixture-row reveal reveal-delay-3">
+          <div class="fixture-team">
+            <div class="team-logo">⚫</div>
+            <div>
+              <div class="team-info-name">Juventus</div>
+              <div class="team-info-league">Home</div>
+            </div>
+          </div>
+          <div class="fixture-score">
+            <div class="score-box">3 — 0</div>
+            <div class="score-time">FT · Yesterday</div>
+          </div>
+          <div class="fixture-team right">
+            <div class="team-logo">🟡</div>
+            <div>
+              <div class="team-info-name">Dortmund</div>
+              <div class="team-info-league">Away</div>
+            </div>
+          </div>
+        </div>
+        <div class="fixture-row reveal reveal-delay-4">
+          <div class="fixture-team">
+            <div class="team-logo">🟡</div>
+            <div>
+              <div class="team-info-name">Arsenal</div>
+              <div class="team-info-league">Home</div>
+            </div>
+          </div>
+          <div class="fixture-score">
+            <div class="score-box">— VS —</div>
+            <div class="score-time">Sat 17:30</div>
+          </div>
+          <div class="fixture-team right">
+            <div class="team-logo">🔵</div>
+            <div>
+              <div class="team-info-name">Man City</div>
+              <div class="team-info-league">Away</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact / Chat -->
+  <section id="contact">
+    <div class="contact-inner">
+      <div class="section-header reveal">
+        <div class="section-tag">AI Assistant</div>
+        <h2 class="section-title">CHAT WITH <span class="dim">FOOTBUZZ</span></h2>
+      </div>
+      <p class="reveal">
+        Ask anything about football — live scores, player stats, transfer rumors,
+        match previews. Our AI assistant has you covered around the clock.
+      </p>
+      <button class="chat-trigger reveal" onclick="if(typeof WatsonAssistantChatEntry !== 'undefined' && window._wa) { window._wa.open(); } else { alert('Click the chat icon in the bottom right corner!'); }">
+        <svg class="chat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        <span>Start Chatting</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-logo">FOOT<span>BUZZ</span></div>
+    <div class="footer-copy">© 2025 FootBuzz · All rights reserved</div>
+    <div class="footer-powered">Powered by IBM Watsonx</div>
+  </footer>
+
+  <!-- Watson Assistant -->
   <script>
     window.watsonAssistantChatOptions = {
       integrationID: "de5224ed-0fa0-4cf2-b995-2b30a75bee63",
       region: "au-syd",
       serviceInstanceID: "7a0e200c-1fc3-45d1-a4bf-1945cb1811e4",
-      onLoad: async (instance) => { await instance.render(); }
+      onLoad: async (instance) => {
+        window._wa = instance;
+        await instance.render();
+      }
     };
-
     setTimeout(function(){
       const t = document.createElement('script');
-      t.src = "https://web-chat.global.assistant.watson.appdomain.cloud/versions/" 
-              + (window.watsonAssistantChatOptions.clientVersion || 'latest') 
-              + "/WatsonAssistantChatEntry.js";
+      t.src = "https://web-chat.global.assistant.watson.appdomain.cloud/versions/" +
+        (window.watsonAssistantChatOptions.clientVersion || 'latest') +
+        "/WatsonAssistantChatEntry.js";
       document.head.appendChild(t);
     });
   </script>
 
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    (function animCursor() {
+      cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(animCursor);
+    })();
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => { cursor.style.transform = 'translate(-50%,-50%) scale(2)'; ring.style.opacity = '0'; });
+      el.addEventListener('mouseleave', () => { cursor.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.opacity = '0.5'; });
+    });
+
+    // Nav scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Counter animation
+    function animateCounter(el, target) {
+      let start = 0;
+      const duration = 1500;
+      const step = timestamp => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        el.textContent = Math.floor(progress * target) + (target === 24 ? '/7' : '+');
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+    const statNums = document.querySelectorAll('.stat-num[data-target]');
+    const statObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          animateCounter(e.target, parseInt(e.target.dataset.target));
+          statObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    statNums.forEach(el => statObserver.observe(el));
+  </script>
 </body>
 </html>
